@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduGenie - AI Learning Assistant</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f7ff;
+            color: #222;
+        }
+
+        header {
+            background: #5b5ce2;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        header p {
+            margin: 8px 0 0;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: #5b5ce2;
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #5b5ce2;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #4546c5;
+        }
+
+        #loginMessage {
+            text-align: center;
+        }
+
+        .answer-box {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f4f7ff;
+            border-radius: 10px;
+            min-height: 100px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .feature {
+            flex: 1;
+            background: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+        }
+
+        .feature h3 {
+            margin-bottom: 5px;
+            color: #5b5ce2;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🎓 EduGenie</h1>
+    <p>Google Gemini Powered Learning Assistant</p>
+</header>
+
+<div class="container">
+
+    <!-- Login Section -->
+    <div id="loginSection" class="card">
+        <h2>🔐 Student Login</h2>
+
+        <input type="email" id="email" placeholder="Enter your email">
+
+        <input type="password" id="password" placeholder="Enter your password">
+
+        <button onclick="login()">Login</button>
+
+        <p id="loginMessage"></p>
+    </div>
+
+
+    <!-- AI Section -->
+    <div id="aiSection" class="card" style="display:none;">
+
+        <h2>🤖 Ask EduGenie</h2>
+        <button onclick="logout()">logout</button>
+        <input
+            type="text"
+            id="question"
+            placeholder="Ask your learning question..."
+        >
+
+        <button onclick="askAI()">Ask EduGenie</button>
+        <button onclick="clearQuestion()">Clear</button>
+        <div class="answer-box">
+            <h3>💡 Answer</h3>
+            <p id="answer">Your answer will appear here.</p>
+        </div>
+
+    </div>
+
+
+    <div class="features">
+
+    <div class="feature">
+        <h3>📚 Ask Questions</h3>
+        <p>Get quick answers to your doubts.</p>
+    </div>
+
+    <div class="feature">
+        <h3>📝 Generate Quiz</h3>
+        <p>Practice your knowledge with simple quizzes.</p>
+        <button onclick="generateQuiz()">Generate Quiz</button>
+    </div>
+
+    <div class="feature">
+        <h3>💡 Explain Simply</h3>
+        <p>Understand difficult concepts easily.</p>
+        <button onclick="explainSimply()">Explain Simply</button>
+    </div>
+
+    <div class="feature">
+        <h3>📖 Generate FAQ</h3>
+        <p>Get useful questions and answers.</p>
+        <button onclick="generateFAQ()">Generate FAQ</button>
+    </div>
+
+    <div class="feature">
+        <h3>💬 Chat History</h3>
+        <p>View your previous questions.</p>
+        <button onclick="showHistory()">View History</button>
+    </div>
+
+    <div class="feature">
+        <h3>📚 Study Notes</h3>
+        <p>Generate simple notes for any topic.</p>
+        <button onclick="generateNotes()">Generate Notes</button>
+    </div>
+
+    <div class="feature">
+        <h3>📄 Summarize Text</h3>
+        <p>Summarize long educational content.</p>
+        <button onclick="summarizeText()">Summarize</button>
+    </div>
+
+    <div class="feature">
+        <h3>👤 User Profile</h3>
+        <p>View your EduGenie profile.</p>
+        <button onclick="showProfile()">View Profile</button>
+    </div>
+
+    <div class="feature">
+        <h3>🧭 Learning Path</h3>
+        <p>Get a step-by-step learning path.</p>
+        <button onclick="generateLearningPath()">Generate Path</button>
+    </div>
+
+</div>
+
+</div>
+<div class="card">
+    <h2>🎓 About EduGenie</h2>
+    <p>
+        EduGenie is an AI-powered learning assistant designed to help
+        students understand concepts, clear doubts, practice questions,
+        and learn more effectively.
+    </p>
+</div>
+<footer>
+    EduGenie © 2026 | AI Learning Assistant
+</footer>
+
+
+<script>
+
+let token = "";
+
+async function login() {
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const message = document.getElementById("loginMessage");
+
+    message.innerText = "Logging in...";
+
+    try {
+
+        const response = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+
+            token = data.data.token;
+
+            message.innerText = "Login successful!";
+
+            document.getElementById("loginSection").style.display = "none";
+
+            document.getElementById("aiSection").style.display = "block";
+
+        } else {
+
+            message.innerText = data.message || "Login failed.";
+
+        }
+
+    } catch (error) {
+
+        message.innerText = "Unable to connect to server.";
+
+    }
+}
+
+
+async function askAI() {
+
+    const question = document.getElementById("question").value;
+    const answer = document.getElementById("answer");
+
+    if (!question) {
+
+        answer.innerText = "Please enter a question.";
+
+        return;
+    }
+
+    answer.innerText = "Thinking...";
+
+    try {
+
+        const response = await fetch("/api/ai/answer", {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+
+            body: JSON.stringify({
+                question: question
+            })
+        });
+
+        const data = await response.json();
+if (data.success) {
+  answer.innerText = data.answer;
+
+  const history = JSON.parse(localStorage.getItem("edugenieHistory") || "[]");
+
+  history.push({
+    question: question,
+    answer: data.answer
+  });
+
+  localStorage.setItem("edugenieHistory", JSON.stringify(history));
+}
+        else {
+
+            answer.innerText = data.message || "Something went wrong.";
+
+        }
+
+    } catch (error) {
+
+        answer.innerText = "Unable to connect to the server.";
+
+    }
+}
+function logout() {
+    token = "";
+    document.getElementById("aiSection").style.display = "none";
+    document.getElementById("loginSection").style.display = "block";
+    document.getElementById("loginMessage").innerText = "";
+    document.getElementById("email").value = "";
+    document.getElementById("password").value = "";
+}
+
+function clearQuestion() {
+    document.getElementById("question").value = "";
+    document.getElementById("answer").innerText = "Your answer will appear here.";
+}
+
+function generateQuiz() {
+  const topic = prompt("Enter a topic for the quiz:");
+
+  if (!topic) return;
+
+  if (topic.toLowerCase() === "data structures") {
+    alert(
+      "EduGenie Quiz\n\n" +
+      "1. What is a data structure?\n" +
+      "A) A way to organize data\n" +
+      "B) A programming language\n" +
+      "C) A computer network\n" +
+      "D) An operating system\n\n" +
+
+      "2. Which is a linear data structure?\n" +
+      "A) Tree\n" +
+      "B) Graph\n" +
+      "C) Array\n" +
+      "D) Network\n\n" +
+
+      "3. Which data structure follows FIFO?\n" +
+      "A) Stack\n" +
+      "B) Queue\n" +
+      "C) Tree\n" +
+      "D) Graph"
+    );
+  } else {
+    alert(
+      "EduGenie Quiz\n\n" +
+      "1. What is " + topic + "?\n" +
+      "A) Basic concept\n" +
+      "B) Programming language\n" +
+      "C) Operating system\n" +
+      "D) Network\n\n" +
+
+      "2. Why is " + topic + " important?\n" +
+      "A) It helps learning\n" +
+      "B) It is a device\n" +
+      "C) It is a file\n" +
+      "D) It is a browser\n\n" +
+
+      "3. Which is related to " + topic + "?\n" +
+      "A) Concept 1\n" +
+      "B) Concept 2\n" +
+      "C) Concept 3\n" +
+      "D) Concept 4"
+    );
+  }
+}
+function explainSimply() {
+  const topic = prompt("Enter a topic to explain:");
+
+  if (!topic) return;
+
+  alert(
+    "Simple Explanation\n\n" +
+    topic + " is explained here in simple words so it is easier to understand."
+  );
+}
+function generateFAQ() {
+  const topic = prompt("Enter a topic for FAQ:");
+
+  if (!topic) return;
+
+  alert(
+    "FAQ\n\n" +
+    "Question: What is " + topic + "?\n\n" +
+    "Answer: " + topic + " is an important topic that helps students understand the subject better."
+  );
+}
+function showHistory() {
+  const history = JSON.parse(localStorage.getItem("edugenieHistory") || "[]");
+
+  if (history.length === 0) {
+    alert("No chat history yet.");
+    return;
+  }
+
+  let text = "Chat History\n\n";
+
+  history.forEach((item, index) => {
+    text += (index + 1) + ". Question: " + item.question + "\n";
+    text += "Answer: " + item.answer + "\n\n";
+  });
+
+  alert(text);
+}
+function generateNotes() {
+  const topic = prompt("Enter a topic for study notes:");
+
+  if (!topic) return;
+
+  alert(
+    "Study Notes\n\n" +
+    "Topic: " + topic + "\n\n" +
+    "• Definition of " + topic + "\n" +
+    "• Important points about " + topic + "\n" +
+    "• Key concepts to remember\n" +
+    "• Example of " + topic
+  );
+}
+function showProfile() {
+  alert(
+    "EduGenie Profile\n\n" +
+    "👤 Student\n" +
+    "📚 Learning Assistant User\n" +
+    "🎓 BCA Student"
+  );
+}
+function summarizeText() {
+  const text = prompt("Enter text to summarize:");
+
+  if (!text) return;
+
+  const summary = text.length > 150
+    ? text.substring(0, 150) + "..."
+    : text;
+
+  alert(
+    "Summary\n\n" +
+    summary
+  );
+}
+function generateLearningPath() {
+  const topic = prompt("Enter a topic to learn:");
+
+  if (!topic) return;
+
+  alert(
+    "Learning Path\n\n" +
+    "Topic: " + topic + "\n\n" +
+    "1. Learn the basic concepts\n" +
+    "2. Understand the important topics\n" +
+    "3. Practice with examples\n" +
+    "4. Test your knowledge\n" +
+    "5. Move to advanced concepts"
+  );
+}
+</script>
+
+</body>
+</html>
